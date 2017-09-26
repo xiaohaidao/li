@@ -1,0 +1,7 @@
+# Ignore CI build directory
+build/
+tags
+*.files
+*.out
+*.swp
+*.pyc
