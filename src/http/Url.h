@@ -7,6 +7,7 @@
 class Url {
 public:
     explicit Url(const std::string& str);
+    Url() {}
     ~Url();
 
     std::string Path() const;

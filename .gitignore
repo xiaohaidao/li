@@ -1,7 +1,11 @@
 # Ignore CI build directory
 build/
+bin/
+libs/
+docs/html/
 tags
 *.files
 *.out
 *.swp
 *.pyc
+*.user

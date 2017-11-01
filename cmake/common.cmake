@@ -1,0 +1,12 @@
+
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(BUILD ${PROJECT_NAME}d)
+elseif(CMAKE_BUILD_TYPE MATCHES "Release")
+    set(BUILD ${PROJECT_NAME})
+elseif(CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo ")
+    set(BUILD ${PROJECT_NAME}rd)
+elseif(CMAKE_BUILD_TYPE MATCHES "MinSizeRel ")
+    set(BUILD ${PROJECT_NAME}mr)
+else()
+    set(BUILD ${PROJECT_NAME})
+endif()

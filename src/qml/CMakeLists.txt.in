@@ -1,0 +1,13 @@
+
+
+set(HEAD
+    )
+
+#qt5_wrap_ui(UI_HEADERS mainwindow.ui)
+##qt5_wrap_cpp(MOC_FILES ${HEAD})
+
+set(SOURCE
+    main.cpp
+    qml.qrc
+    )
+

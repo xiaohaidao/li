@@ -73,17 +73,17 @@ flags = [
 '-I',
 './ClangCompleter',
 '-isystem',
-'./tests/gmock/gtest',
+'./tests/googletest',
 '-isystem',
-'./tests/gmock/gtest/include',
+'./tests/googletest/include',
 '-isystem',
-'./tests/gmock',
+'./tests/googlemock',
 '-isystem',
-'./tests/gmock/include',
-'-isystem',
-'./src',
+'./tests/googlemock/include',
 '-isystem',
 './include',
+'-isystem',
+'./src',
 ]
 
 
