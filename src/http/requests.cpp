@@ -1,55 +1,69 @@
-
 #include "requests.h"
-#include "asio.hpp"
+//#include <future>
+#include <functional>
 
-/*
- *using asio::ip::tcp::socket;
- *using asio::ip::tcp::resolver;
- *using asio::ip::tcp::resolver::query;
- *using asio::ip::tcp::resolver::iterator;
- *
- *using ip::tcp::acceptor;
- *
- *
- */
-/*
- * clients
- *asio::io_service service;
- *resolver re(service);
- *query que("www.boost.org", "http");
- *iterator iter = resolver.resolve(que);
- *iterator end;
- *
- *socket socket(service);
- *asio::connect(socket, resolver.resolve(qury)); // until one is successfully connected
- *socket.connect(endpoint); // when a specific endpoint is available
- *asio::async_connect(socket, iter, bind(&handle_connect, this, asio::placeholders::error));
- *void handle_connect(const error_code& error) {if (!error) {} else {}}
- *
- * server
- *aceptor accept(service, endpoint);
- *socket soc(service);
- *accept.accept(soc);
- */
+using asio::ip::tcp;
 
-Request::Request() {}
+asio::io_service Request::IO;
+
+Request::Request() : socket_(IO) {}
 
 Request::~Request() {}
 
+int Request::Open() {
+    text_.clear();
 
-void Request::Open() {}
+    tcp::resolver res(IO);
+    tcp::resolver::query qu(GetHost(), "http");
+    tcp::resolver::iterator endp = res.resolve(qu);
+    tcp::resolver::iterator end;
+    try {
+        asio::error_code error = asio::error::host_not_found;;
+        while(error && endp != end) {
+            socket_.close();
+            socket_.connect(*endp++, error);
+        }
+        if (error) {
+            return 1;
+        }
 
-std::string Request::ToStr() {
+        text_.clear();
+        socket_.write_some(asio::buffer(GetHeader()));
+        for (;;) {
+            char buff[512];
+            //size_t len = asio::read(socket_,asio::buffer(buff), error);
+            size_t len = socket_.read_some(asio::buffer(buff), error);
+
+            if (error == asio::error::eof)
+                break;
+            else if (error) {
+                break;
+            }
+            text_ += std::string(buff, len);
+        }
+    }
+    catch (std::exception &e) {
+        return 1;
+        socket_.close();
+    }
+    socket_.close();
+    return 0;
+}
+
+std::string Request::GetHost() const {
+    return header_.GetHost();
+}
+
+std::string Request::GetHeader() {
     std::string st = FirstStr();
     std::string jjj;
-    int error;
-    if (header_.HeaderToString(jjj, error)) {
+    if (!header_.GetHeader(jjj)) {
         st += jjj;
     }
     return st;
 }
 
-const std::string &Request::Text() {
+const std::string &Request::Text() const {
     return text_;
 }
 
@@ -65,7 +79,7 @@ void Request::SetHeader(const std::string &header) {
     header_.SetHeader(header);
 }
 
-void Request::Get(const std::string &url) {
+void Request::SetUrl(const std::string &url) {
     header_.SetUrl(url);
     type_ = GET;
 }

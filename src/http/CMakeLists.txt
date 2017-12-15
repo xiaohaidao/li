@@ -1,6 +1,9 @@
 project(http)
 
 add_definitions(-DASIO_STANDALONE)
+if(CYGWIN)
+    add_definitions(-D__USE_W32_SOCKETS)
+endif()
 
 set(http_h
     header.h
@@ -13,4 +16,8 @@ set(http_src
     requests.cpp
     Url.cpp)
 
-add_executable(${PROJECT_NAME} ${http_src} ${http_h})
+include(${CMAKEDIR}/common.cmake)
+
+use_cxx11()
+
+add_executable(${BUILD} ${http_src} ${http_h})

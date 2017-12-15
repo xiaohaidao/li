@@ -14,6 +14,8 @@ public:
     std::string Host() const;
     int Port() const;
 
+    void Clear();
+
     bool IsEmpty() const;
 
     void SetUrl(const std::string& url);
@@ -21,6 +23,7 @@ public:
     void SetPath(const std::string& path);
     void SetHost(const std::string& host);
     void SetPort(int port);
+
 
     std::string ToString() const;
 

@@ -1,6 +1,4 @@
 
-set(subdir http qml)
+include(${CMAKEDIR}/common.cmake)
 
-foreach(dirs ${subdir})
-    add_subdirectory(${dirs})
-endforeach()
+ForSubdir(http qml)

@@ -4,28 +4,32 @@
 
 #include <string>
 #include "header.h"
+#include "asio.hpp"
 
 class Request {
 public:
     Request();
     ~Request();
 
-    void Open();
-    const std::string &Text();
+    int Open();
+    const std::string &Text() const;
     void SetHeader(const std::string &header);
-    void Get(const std::string &url);
+    void SetUrl(const std::string &url);
+    std::string GetHeader();
+    std::string GetHost() const;
 
 private:
     enum type {
         GET,
         POST,
     };
-    std::string ToStr();
     std::string FirstStr() const;
 
     header::RequestHeader header_;
     std::string text_;
     type type_;
+    static asio::io_service IO;
+    asio::ip::tcp::socket socket_;
 };
 
 #endif // REQUESTS_H

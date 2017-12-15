@@ -75,3 +75,8 @@ std::string Url::ToString() const {
     }
     return host_ + sst.str() + path_;
 }
+void Url::Clear() {
+  host_.clear();
+  path_.clear();
+  port_ = 80;
+}

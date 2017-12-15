@@ -27,7 +27,7 @@ ABBREVIATE_BRIEF       = "The $name class" \
                          the
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = NO
-FULL_PATH_NAMES        = YES
+FULL_PATH_NAMES        = NO
 STRIP_FROM_PATH        =
 STRIP_FROM_INC_PATH    =
 SHORT_NAMES            = NO
@@ -62,7 +62,7 @@ LOOKUP_CACHE_SIZE      = 0
 # Build related configuration options
 #---------------------------------------------------------------------------
 EXTRACT_ALL            = YES
-EXTRACT_PRIVATE        = YES
+EXTRACT_PRIVATE        = NO
 EXTRACT_PACKAGE        = YES
 EXTRACT_STATIC         = YES
 EXTRACT_LOCAL_CLASSES  = YES
@@ -101,7 +101,7 @@ CITE_BIB_FILES         =
 #---------------------------------------------------------------------------
 # Configuration options related to warning and progress messages
 #---------------------------------------------------------------------------
-QUIET                  = NO
+QUIET                  = YES
 WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
@@ -164,7 +164,7 @@ EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
-EXAMPLE_PATH           =
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/tests
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             =
@@ -233,7 +233,7 @@ QHG_LOCATION           =
 GENERATE_ECLIPSEHELP   = NO
 ECLIPSE_DOC_ID         = org.doxygen.Project
 DISABLE_INDEX          = NO
-GENERATE_TREEVIEW      = NO
+GENERATE_TREEVIEW      = YES
 ENUM_VALUES_PER_LINE   = 4
 TREEVIEW_WIDTH         = 250
 EXT_LINKS_IN_WINDOW    = NO

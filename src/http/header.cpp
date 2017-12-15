@@ -2,7 +2,7 @@
 
 #include "header.h"
 
-#include <regex>
+#include "string_format.hpp"
 
 static std::map<std::string, std::string> requests = {
     { "Accept", "text/plain, text/html" },
@@ -114,7 +114,7 @@ static std::map<std::string, std::string> responses = {
 
 namespace header {
 
-RequestHeader::RequestHeader(const std::string &header) {
+RequestHeader::RequestHeader(const std::string &header) : done_(0), status_(0) {
     SetHeader(header);
 }
 
@@ -123,18 +123,44 @@ RequestHeader::RequestHeader() {
     SetHeader("Connection", "close");
 }
 
-bool RequestHeader::HeaderToString(std::string &header, int &error_code) {
+void RequestHeader::ClearStatus() {
+  done_ = 0;
+  status_ = 0;
+  //url_.Clear();
+  header_.clear();
+}
+
+int RequestHeader::Paser(std::string &str) {
+  std::regex ret("\\r\\n");
+  std::smatch result;
+  std::regex_search(str, result, ret);
+  for (; !result.empty() || done_ == 2; std::regex_search(str, result, ret)) {
+    if (result.prefix.size() == 0) {
+      ++done_;
+    } else {
+      PaserLine(result.prefix);
+    }
+    str = result.suffix;
+  }
+}
+
+int RequestHeader::PaserLine(const std::string &str) {
+  std::regex first_line("HTTP/1.[0,1] ([0-9]\\+) .*");
+  std::regex paser(" *([^ ]*) *: *(.*)");
+
+}
+
+int RequestHeader::GetHeader(std::string &header) {
     header.clear();
     auto iter = header_.find("Host");
     if (iter == header_.end()) {
-        error_code = 1; // host none error num
-        return false;
+        return 1;
     }
     for (auto i = header_.begin(); i != header_.end(); ++i) {
         header += (i->first + ": " + i->second + "\r\n");
     }
     header += "\r\n";
-    return true;
+    return 0;
 }
 
 void RequestHeader::SetUrl(const std::string &url) {
@@ -183,11 +209,6 @@ std::string RequestHeader::GetPath() const {
 void RequestHeader::TranToUpper(std::string &text) {
     std::transform(text.begin(), text.end(), text.begin(), tolower);
     std::transform(text.begin(), text.begin() + 1, text.begin(), toupper);
-}
-
-void RequestHeader::Trim(std::string &text) {
-    std::regex trim("^ *| *$");
-    text = std::regex_replace(text, trim, "");
 }
 
 } // namespace header

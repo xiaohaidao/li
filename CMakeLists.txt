@@ -16,6 +16,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/libs)
 # Generate compile_commands.json to ycm
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Set variable of common cmake dir
 set(CMAKEDIR ${PROJECT_SOURCE_DIR}/cmake)
 
 # set include and link search path
@@ -31,6 +32,7 @@ endif()
 # Add sub directory
 add_subdirectory(src)
 add_subdirectory(docs)
+add_subdirectory(include)
 
 if(BUILD_TEST)
     enable_testing()
