@@ -114,7 +114,18 @@ static std::map<std::string, std::string> responses = {
 
 namespace header {
 
-RequestHeader::RequestHeader(const std::string &header) : done_(0), status_(0) {
+using std::regex;
+using std::regex_match;
+using std::regex_search;
+using std::regex_replace;
+using std::smatch;
+
+void TranToUpper(std::string &text) {
+    std::transform(text.begin(), text.end(), text.begin(), tolower);
+    std::transform(text.begin(), text.begin() + 1, text.begin(), toupper);
+}
+
+RequestHeader::RequestHeader(const std::string &header) {
     SetHeader(header);
 }
 
@@ -123,31 +134,9 @@ RequestHeader::RequestHeader() {
     SetHeader("Connection", "close");
 }
 
-void RequestHeader::ClearStatus() {
-  done_ = 0;
-  status_ = 0;
-  //url_.Clear();
+int RequestHeader::Clear() {
   header_.clear();
-}
-
-int RequestHeader::Paser(std::string &str) {
-  std::regex ret("\\r\\n");
-  std::smatch result;
-  std::regex_search(str, result, ret);
-  for (; !result.empty() || done_ == 2; std::regex_search(str, result, ret)) {
-    if (result.prefix.size() == 0) {
-      ++done_;
-    } else {
-      PaserLine(result.prefix);
-    }
-    str = result.suffix;
-  }
-}
-
-int RequestHeader::PaserLine(const std::string &str) {
-  std::regex first_line("HTTP/1.[0,1] ([0-9]\\+) .*");
-  std::regex paser(" *([^ ]*) *: *(.*)");
-
+  url_.Clear();
 }
 
 int RequestHeader::GetHeader(std::string &header) {
@@ -206,10 +195,56 @@ std::string RequestHeader::GetPath() const {
     return url_.Path();
 }
 
-void RequestHeader::TranToUpper(std::string &text) {
-    std::transform(text.begin(), text.end(), text.begin(), tolower);
-    std::transform(text.begin(), text.begin() + 1, text.begin(), toupper);
+////////////////////////////////////////////////////////////////////////////////
+
+ResponseHeader::ResponseHeader() : done_2_(0), status_(0), first_line_(true) {
+
 }
+
+int ResponseHeader::GetStatus() {
+  return status_;
+}
+
+int ResponseHeader::Clear() {
+  done_2_ = 0;
+  status_ = 0;
+  header_.clear();
+  first_line_ = true;
+}
+
+int ResponseHeader::Paser(std::string &str) {
+  std::regex ret("\\r\\n");
+  std::smatch result;
+  std::regex_search(str, result, ret);
+  for (; !result.empty() || done_2_ == 2; std::regex_search(str, result, ret)) {
+    if (result.prefix.size() == 0) {
+      ++done_2_;
+    } else {
+      PaserLine(result.prefix);
+    }
+    str = result.suffix;
+  }
+}
+
+int ResponseHeader::PaserLine(const std::string &str) {
+  smatch result;
+  if (first_line_) {
+    regex first_line("HTTP/1.[0,1] ([0-9]\\+) .*");
+    regex_search(str, result, first_line);
+
+    if (!result.empty()) {
+      first_line_ = false;
+      if (result[1].match()) {
+        status_ = result[1];
+      }
+      return 0;
+    }
+  }
+  regex paser(" *([^ ]*):(.*)");
+  regex_search(str, result, paser);
+  header_[TranToUpper(Trim(result[1]))] = Trim(result[2]);
+}
+
 
 } // namespace header
 
