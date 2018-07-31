@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.4)
 
 # The project name
 project (LiH)
@@ -20,7 +20,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKEDIR ${PROJECT_SOURCE_DIR}/cmake)
 
 # set include and link search path
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/3rdparty)
 LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/libs)
 
 # Set the Readme.md file into html
@@ -30,9 +30,9 @@ if (USER_DOXY_PAGE)
 endif()
 
 # Add sub directory
-add_subdirectory(src)
+add_subdirectory(src/*)
 add_subdirectory(docs)
-add_subdirectory(include)
+#add_subdirectory(include)
 
 if(BUILD_TEST)
     enable_testing()

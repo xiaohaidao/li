@@ -1,5 +1,5 @@
 # Ignore CI build directory
-build/
+build*/
 bin/
 libs/
 docs/html/
@@ -9,3 +9,4 @@ tags
 *.swp
 *.pyc
 *.user
+CMakeSettings.json
