@@ -46,7 +46,7 @@ class ResponseHeader {
     std::map<std::string, std::string> header_;
     int done_2_;
     int status_;
-    bool fisrt_line_;
+    bool first_line_;
 };
 
 } // namespace header

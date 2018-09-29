@@ -1,8 +1,8 @@
-//http://kb.cnblogs.com/page/92320/
+// http://kb.cnblogs.com/page/92320/
 
 #include "header.h"
 
-#include "string_format.hpp"
+#include "utility/string_format.hpp"
 
 static std::map<std::string, std::string> requests = {
     { "Accept", "text/plain, text/html" },
@@ -120,9 +120,10 @@ using std::regex_search;
 using std::regex_replace;
 using std::smatch;
 
-void TranToUpper(std::string &text) {
-    std::transform(text.begin(), text.end(), text.begin(), tolower);
-    std::transform(text.begin(), text.begin() + 1, text.begin(), toupper);
+std::string TranToUpper(const std::string &text) {
+  std::string re = text;
+  std::transform(re.begin(), re.end(), re.begin(), toupper);
+  return re;
 }
 
 RequestHeader::RequestHeader(const std::string &header) {
@@ -167,7 +168,7 @@ bool RequestHeader::SetHeader(const std::string &header) {
         text = result.suffix();
         h_type = result[1].str();
         h_text = result[2].str();
-        Trim(h_type); Trim(h_text);
+        utility::Trim(h_type); utility::Trim(h_text);
         TranToUpper(h_type);
         SetHeader(h_type, h_text);
     } while (result[1].matched || result[2].matched);
@@ -210,6 +211,7 @@ int ResponseHeader::Clear() {
   status_ = 0;
   header_.clear();
   first_line_ = true;
+  return 0;
 }
 
 int ResponseHeader::Paser(std::string &str) {
@@ -224,6 +226,7 @@ int ResponseHeader::Paser(std::string &str) {
     }
     str = result.suffix;
   }
+  return 0;
 }
 
 int ResponseHeader::PaserLine(const std::string &str) {
@@ -234,15 +237,16 @@ int ResponseHeader::PaserLine(const std::string &str) {
 
     if (!result.empty()) {
       first_line_ = false;
-      if (result[1].match()) {
-        status_ = result[1];
+      if (result[1].length()) {
+        status_ = std::stoi(result[1]);
       }
       return 0;
     }
   }
   regex paser(" *([^ ]*):(.*)");
   regex_search(str, result, paser);
-  header_[TranToUpper(Trim(result[1]))] = Trim(result[2]);
+  header_[TranToUpper(utility::Trim(result[1]))] = utility::Trim(result[2]);
+  return 1;
 }
 
 

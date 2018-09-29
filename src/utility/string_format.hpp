@@ -1,20 +1,20 @@
-#ifndef STRING_FORMAT
-#define STRING_FORMAT
+#ifndef UTILITY_STRING_FORMAT
+#define UTILITY_STRING_FORMAT
 
 #include <cstdarg>
 #include <regex>
 #include <sstream>
 
-inline int Trim(std::string &str) {
+namespace utility {
+
+inline std::string Trim(const std::string &str) {
   std::regex re("^ *| *$");
-  str = std::regex_replace(str, re, "");
-  return 0;
+  return std::regex_replace(str, re, "");
 }
 
-inline int WTrim(std::wstring &str) {
-  std::wregex re("^ *| *$");
-  str = std::regex_replace(str, re, "");
-  return 0;
+inline std::wstring WTrim(const std::wstring &str) {
+  std::wregex re(L"^ *| *$");
+  return std::regex_replace(str, re, L"");
 }
 
 /*
@@ -32,7 +32,7 @@ inline std::string Format(const char *str...) {
 
   char buff[10];
   std::string x =  va_arg(args, char *);
-  for (size_t i = 0; i < 100000; x = va_arg(args, char *), ++i) {
+  for (int i = 0; i < 100000; x = va_arg(args, char *), ++i) {
     snprintf(buff, sizeof(buff), "\\{%d\\}", i);
     std::regex regular(buff);
     std::smatch march;
@@ -51,7 +51,7 @@ inline std::wstring WFormat(const wchar_t *str...) {
 
   wchar_t buff[10];
   std::wstring x =  va_arg(args, wchar_t *);
-  for (size_t i = 0; i < 100000; x = va_arg(args, wchar_t *), ++i) {
+  for (int i = 0; i < 100000; x = va_arg(args, wchar_t *), ++i) {
     swprintf(buff, sizeof(buff), L"\\{%d\\}", i);
     std::wregex regular(buff);
     std::wsmatch march;
@@ -105,5 +105,7 @@ inline std::wstring TWFormat(T format, _T... args) {
   return _internal::_TWFormat(0, r, args...);
 }
 
-#endif /* ifndef STRING_FORMAT */
+} // namespace utility
+
+#endif /* ifndef UTILITY_STRING_FORMAT */
 
