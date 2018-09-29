@@ -9,4 +9,5 @@ tags
 *.swp
 *.pyc
 *.user
+.vs/
 CMakeSettings.json

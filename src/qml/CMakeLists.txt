@@ -1,12 +1,16 @@
 
-project(qml)
+project(qml VERSION 0.0.1)
 
+set(PUBLIC_HEADER_)
 
-include(CmakeLists.txt.in)
-include(${CMAKEDIR}/common.cmake)
+set(SOURCE_
+    main.cpp
+    qml.qrc
+    )
 
-Findqt5(core quick)
+set(QT_MODULE_ Quick Qml)
 
-add_executable(${BUILD} ${HEAD} ${SOURCE})
+AddExecute(TARGET "${PROJECT_NAME}"
+    SOURCE "${SOURCE_}"
+    QT_MODULE "${QT_MODULE_}")
 
-target_link_libraries(${BUILD} Qt5::Core Qt5::Quick)
